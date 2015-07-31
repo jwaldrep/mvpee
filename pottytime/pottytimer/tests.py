@@ -24,12 +24,23 @@ class HomePageTest(TestCase):
         request.POST['sticker_text'] = '0'
 
         response = home_page(request)
+
+        self.assertEqual(Sticker.objects.count(), 1)
+        new_sticker = Sticker.objects.first()
+        self.assertEqual(new_sticker.text, '0')
+
+        # FIXME: POST test should be broken up
         self.assertIn('0', response.content.decode())
         expected_html = render_to_string(
             'home.html',
             {'new_sticker_text':  '0'}
         )
         self.assertEqual(response.content.decode(), expected_html)
+
+    def test_home_page_only_saves_items_when_necessary(self):
+        request = HttpRequest()
+        home_page(request)
+        self.assertEqual(Sticker.objects.count(), 0)
 
 class StickerModelTest(TestCase):
 
