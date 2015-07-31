@@ -1,3 +1,4 @@
 from django.db import models
 
-# Create your models here.
+class Sticker(models.Model):
+    text = models.TextField(default='0')

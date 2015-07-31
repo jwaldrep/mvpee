@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.http import HttpRequest
 
 from pottytimer.views import home_page
+from pottytimer.models import Sticker
 
 class HomePageTest(TestCase):
 
@@ -29,3 +30,22 @@ class HomePageTest(TestCase):
             {'new_sticker_text':  '0'}
         )
         self.assertEqual(response.content.decode(), expected_html)
+
+class StickerModelTest(TestCase):
+
+    def test_saving_and_retrieving_stickers(self):
+        first_sticker = Sticker()
+        first_sticker.text = '2'
+        first_sticker.save()
+
+        second_sticker = Sticker()
+        second_sticker.text = '0'
+        second_sticker.save()
+
+        saved_stickers = Sticker.objects.all()
+        self.assertEqual(saved_stickers.count(), 2)
+
+        first_saved_sticker = saved_stickers[0]
+        second_saved_sticker = saved_stickers[1]
+        self.assertEqual(first_saved_sticker.text, '2')
+        self.assertEqual(second_saved_sticker.text, '0')
