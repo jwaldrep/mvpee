@@ -44,16 +44,6 @@ class HomePageTest(TestCase):
         home_page(request)
         self.assertEqual(Sticker.objects.count(), 0)
 
-    def test_home_page_displays_all_list_items(self):
-        Sticker.objects.create(text='2!')
-        Sticker.objects.create(text='1!')
-
-        request = HttpRequest()
-        response = home_page(request)
-
-        self.assertIn('2!', response.content.decode())
-        self.assertIn('1!', response.content.decode())
-
 
 class StickerModelTest(TestCase):
 
@@ -75,6 +65,11 @@ class StickerModelTest(TestCase):
         self.assertEqual(second_saved_sticker.text, '0')
 
 class ChartViewTest(TestCase):
+
+    def test_uses_chart_template(self):
+        response = self.client.get('/charts/lone-chart/')
+        self.assertTemplateUsed(response, 'chart.html')
+
 
     def test_displays_all_stickers(self):
         Sticker.objects.create(text='2!')

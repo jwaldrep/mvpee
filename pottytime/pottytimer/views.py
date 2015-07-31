@@ -13,5 +13,5 @@ def home_page(request):
 
 def view_chart(request):
     stickers = Sticker.objects.all()
-    return render(request, 'home.html', {'stickers': stickers}  )
+    return render(request, 'chart.html', {'stickers': stickers}  )
 
