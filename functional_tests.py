@@ -51,18 +51,30 @@ class NewVisitorTest(unittest.TestCase):
         # It also logs the entry as a sticker in the chart
         table = self.browser.find_element_by_id('id_sticker_chart')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '0' for row in rows),
-            "New sticker did not appear in chart"
-            # FIXME: Add timestamp to test
-        )
+        self.assertIn('1: #0', [row.text for row in rows])
+        # TODO: Replace index with timestamp
 
         # also visible at an API endpoint
-        # FIXME: Add API test
+        # TODO: Add API test
 
         # and starts the 20 minute timer again
-        timer_text = self.browser.find_element_by_tag_name('h5').text
+        timer_text = self.browser.find_element_by_tag_name('h4').text
         self.assertRegex(timer_text,r'\d\d:\d\d:\d\d')
+
+        # Surprise! A couple second after entering the 0, a #1 sneaks up
+        # out of nowhere, so Joan enters the 1
+        import time
+        time.sleep(2)
+        inputbox = self.browser.find_element_by_id('id_new_sticker')
+        inputbox.send_keys('1')
+        inputbox.send_keys(Keys.ENTER)
+
+        # The page updates again to show both entries
+        table = self.browser.find_element_by_id('id_sticker_chart')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('2: #1', [row.text for row in rows])
+        # TODO: Replace index with timestamp
+
 
 
         # After the timer expires, the entire process starts again

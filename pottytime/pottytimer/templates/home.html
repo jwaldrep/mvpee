@@ -5,10 +5,14 @@
 </head>
 <body>
     <h1>PottyTime!</h1>
-    <input id="id_new_sticker" placeholder="Did you go 1 or 2? (0 = try)" />
+    <form method="POST">
+        <input name ="sticker_text" id="id_new_sticker" placeholder="Did you go 1 or 2? (0 = try)" />
+        {% csrf_token %}
+    </form>
     <h2>Factoid: The human head weighs 8 pounds.</h2>
     <h3>00:00:00</h3>
     <table id="id_sticker_chart">
+        <tr><td>1: #{{ new_sticker_text}}</td></tr>
     </table>
     <h4>00:00:00</h4>
 </body>
