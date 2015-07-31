@@ -57,6 +57,8 @@ class NewVisitorTest(LiveServerTestCase):
 
 
         # It also logs the entry as a sticker in the chart
+        joan_chart_url = self.browser.current_url
+        self.assertRegex(joan_chart_url, '/charts/.+')
         self.check_for_row_in_sticker_chart('1: #0')
         # TODO: Replace index with timestamp
 
@@ -79,10 +81,40 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_sticker_chart('1: #0')
         self.check_for_row_in_sticker_chart('2: #1')
         # TODO: Replace index with timestamp
-        self.fail('Finish writing the test!')
 
 
         # After the timer expires, the entire process starts again
+
+        # Now a new user, Francis, comes along to the site. His child's
+        # potty needs are quite urgent.
+
+
+        ## We use a new browser session to make sure that no information
+        ## of Joan's is coming through from cookies etc
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Francis visits the home page.  There is no sign of Joan's chart
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('1: #0', page_text)
+
+        # Francis starts a new chart by entering a new sticker entry
+        inputbox = self.browser.find_element_by_id('id_new_sticker')
+        inputbox.send_keys('2')
+        inputbox.send_keys(Keys.ENTER)
+
+        # Francis gets his own unique URL
+        francis_chart_url = self.browser.current_url
+        self.assertRegex(francis_chart_url, '/charts/.+')
+        self.assertNotEqual(francis_chart_url, joan_chart_url)
+
+        # Again, there is no trace of Joan's chart
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('1: #0', page_text)
+        self.assertIn('1: #2', page_text)
+
+        # Satisfied, they both go back to sleep
 
 if __name__ == '__main__':
     unittest.main()
