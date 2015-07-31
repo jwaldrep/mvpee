@@ -5,8 +5,13 @@ from pottytimer.models import Sticker
 def home_page(request):
     if request.method == 'POST':
         Sticker.objects.create(text=request.POST['sticker_text'])
-        return redirect('/')
+        return redirect('/charts/lone-chart/')
 
     stickers = Sticker.objects.all()
 
     return render(request, 'home.html', {'stickers': stickers}  )
+
+def view_chart(request):
+    stickers = Sticker.objects.all()
+    return render(request, 'home.html', {'stickers': stickers}  )
+

@@ -37,7 +37,7 @@ class HomePageTest(TestCase):
         response = home_page(request)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/charts/lone-chart/')
 
     def test_home_page_only_saves_items_when_necessary(self):
         request = HttpRequest()
@@ -73,3 +73,14 @@ class StickerModelTest(TestCase):
         second_saved_sticker = saved_stickers[1]
         self.assertEqual(first_saved_sticker.text, '2')
         self.assertEqual(second_saved_sticker.text, '0')
+
+class ChartViewTest(TestCase):
+
+    def test_displays_all_stickers(self):
+        Sticker.objects.create(text='2!')
+        Sticker.objects.create(text='1!')
+
+        response = self.client.get('/charts/lone-chart/')
+
+        self.assertContains(response, '2!')
+        self.assertContains(response, '1!')
