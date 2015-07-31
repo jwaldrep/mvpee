@@ -52,7 +52,8 @@ class NewVisitorTest(unittest.TestCase):
         table = self.browser.find_element_by_id('id_sticker_chart')
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
-            any(row.text == '0' for row in rows)
+            any(row.text == '0' for row in rows),
+            "New sticker did not appear in chart"
             # FIXME: Add timestamp to test
         )
 
