@@ -12,6 +12,12 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_sticker_chart(self, row_text):
+        table = self.browser.find_element_by_id('id_sticker_chart')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
+
     def test_can_log_a_potty_training_cycle(self):
         # Joan has heard about a cool new potty-training app to use with her toddler.
         # She visits the site with her potty-training son, Harold
@@ -49,9 +55,7 @@ class NewVisitorTest(unittest.TestCase):
 
 
         # It also logs the entry as a sticker in the chart
-        table = self.browser.find_element_by_id('id_sticker_chart')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: #0', [row.text for row in rows])
+        self.check_for_row_in_sticker_chart('1: #0')
         # TODO: Replace index with timestamp
 
         # also visible at an API endpoint
@@ -70,9 +74,8 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
 
         # The page updates again to show both entries
-        table = self.browser.find_element_by_id('id_sticker_chart')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('2: #1', [row.text for row in rows])
+        self.check_for_row_in_sticker_chart('1: #0')
+        self.check_for_row_in_sticker_chart('2: #1')
         # TODO: Replace index with timestamp
 
 
