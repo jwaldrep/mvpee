@@ -1,9 +1,10 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 import unittest
 from selenium.webdriver.common.keys import Keys
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -13,6 +14,7 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.quit()
 
     def check_for_row_in_sticker_chart(self, row_text):
+        """Helper function to find a given sticker within the chart"""
         table = self.browser.find_element_by_id('id_sticker_chart')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
@@ -21,7 +23,7 @@ class NewVisitorTest(unittest.TestCase):
     def test_can_log_a_potty_training_cycle(self):
         # Joan has heard about a cool new potty-training app to use with her toddler.
         # She visits the site with her potty-training son, Harold
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # She notices the page title and header are potty-centric
         self.assertIn('Potty', self.browser.title)
@@ -77,7 +79,7 @@ class NewVisitorTest(unittest.TestCase):
         self.check_for_row_in_sticker_chart('1: #0')
         self.check_for_row_in_sticker_chart('2: #1')
         # TODO: Replace index with timestamp
-
+        self.fail('Finish writing the test!')
 
 
         # After the timer expires, the entire process starts again
