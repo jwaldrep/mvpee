@@ -1,14 +1,12 @@
 # from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from pottytimer.models import Sticker
 
 def home_page(request):
     if request.method == 'POST':
-        new_sticker_text = request.POST['sticker_text']
-        Sticker.objects.create(text=new_sticker_text)
-    else:
-        new_sticker_text = ''
+        Sticker.objects.create(text=request.POST['sticker_text'])
+        return redirect('/')
 
-    return render(request, 'home.html', {
-        'new_sticker_text': new_sticker_text,
-    })
+    stickers = Sticker.objects.all()
+
+    return render(request, 'home.html', {'stickers': stickers}  )

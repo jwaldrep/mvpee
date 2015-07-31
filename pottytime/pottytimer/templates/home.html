@@ -6,13 +6,15 @@
 <body>
     <h1>PottyTime!</h1>
     <form method="POST">
-        <input name ="sticker_text" id="id_new_sticker" placeholder="Did you go 1 or 2? (0 = try)" />
+        <input name ="sticker_text" id="id_new_sticker" placeholder="Did you go 1 or 2 (or 0)?" />
         {% csrf_token %}
     </form>
     <h2>Factoid: The human head weighs 8 pounds.</h2>
     <h3>00:00:00</h3>
     <table id="id_sticker_chart">
-        <tr><td>1: #{{ new_sticker_text}}</td></tr>
+        {% for sticker in stickers %}
+            <tr><td>{{ forloop.counter }}: #{{ sticker.text}}</td></tr>
+        {% endfor %}
     </table>
     <h4>00:00:00</h4>
 </body>

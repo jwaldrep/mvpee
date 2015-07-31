@@ -40,7 +40,7 @@ class NewVisitorTest(unittest.TestCase):
         inputbox = self.browser.find_element_by_id('id_new_sticker')
         self.assertEqual(
                 inputbox.get_attribute('placeholder'),
-                'Did you go 1 or 2? (0 = try)'
+                'Did you go 1 or 2 (or 0)?'
         )
 
         # After a few seconds, she selects 0, and hits enter
