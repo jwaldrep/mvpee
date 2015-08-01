@@ -56,19 +56,26 @@ class ChartAndStickerModelTest(TestCase):
 class ChartViewTest(TestCase):
 
     def test_uses_chart_template(self):
-        response = self.client.get('/charts/lone-chart/')
+        chart = Chart.objects.create()
+        response = self.client.get('/charts/%d/' % (chart.id,))
         self.assertTemplateUsed(response, 'chart.html')
 
 
-    def test_displays_all_stickers(self):
-        chart = Chart.objects.create()
-        Sticker.objects.create(text='2!', chart=chart)
-        Sticker.objects.create(text='1!', chart=chart)
+    def test_displays_only_stickers_for_that_list(self):
+        correct_chart = Chart.objects.create()
+        Sticker.objects.create(text='2!', chart=correct_chart)
+        Sticker.objects.create(text='1!', chart=correct_chart)
+        other_chart = Chart.objects.create()
+        Sticker.objects.create(text='0!!', chart=other_chart)
+        Sticker.objects.create(text='2!!', chart=other_chart)
 
-        response = self.client.get('/charts/lone-chart/')
+        response = self.client.get('/charts/%d/' % (correct_chart.id,))
 
         self.assertContains(response, '2!')
         self.assertContains(response, '1!')
+        self.assertNotContains(response, '0!!')
+        self.assertNotContains(response, '2!!')
+
 
 class NewChartTest(TestCase):
 
@@ -86,6 +93,32 @@ class NewChartTest(TestCase):
             '/charts/new',
             data={'sticker_text': '0'}
         )
+        new_chart = Chart.objects.first()
+        self.assertRedirects(response, '/charts/%d/' % (new_chart.id,))
 
-        self.assertRedirects(response, '/charts/lone-chart/')
+class NewStickerTest(TestCase):
 
+    def test_can_save_a_POST_request_to_an_existing_chart(self):
+        other_chart = Chart.objects.create()
+        correct_chart = Chart.objects.create()
+
+        self.client.post(
+            '/charts/%d/add_sticker' % (correct_chart.id,),
+            data={'sticker_text': '0?'}
+        )
+
+        self.assertEqual(Sticker.objects.count(), 1)
+        new_sticker = Sticker.objects.first()
+        self.assertEqual(new_sticker.text, '0?')
+        self.assertEqual(new_sticker.chart, correct_chart)
+
+    def test_redirects_to_list_view(self):
+        other_chart = Chart.objects.create()
+        correct_chart = Chart.objects.create()
+
+        response = self.client.post(
+            '/charts/%d/add_sticker' % (correct_chart.id,),
+            data={'sticker_text': '0?'}
+        )
+
+        self.assertRedirects(response, '/charts/%d/' % (correct_chart.id,))
