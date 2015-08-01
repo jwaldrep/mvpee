@@ -15,8 +15,7 @@ def home_page(request):
 
 def view_chart(request, chart_id):
     chart = Chart.objects.get(id=chart_id)
-    stickers = Sticker.objects.filter(chart=chart)
-    return render(request, 'chart.html', {'stickers': stickers}  )
+    return render(request, 'chart.html', {'chart': chart})
 
 def new_chart(request):
     chart = Chart.objects.create()

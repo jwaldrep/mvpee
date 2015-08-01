@@ -76,6 +76,11 @@ class ChartViewTest(TestCase):
         self.assertNotContains(response, '0!!')
         self.assertNotContains(response, '2!!')
 
+    def test_passes_correct_chart_to_template(self):
+        other_chart = Chart.objects.create()
+        correct_chart = Chart.objects.create()
+        response = self.client.get('/charts/%d/' % (correct_chart.id,))
+        self.assertEqual(response.context['chart'], correct_chart)
 
 class NewChartTest(TestCase):
 
