@@ -1,21 +1,5 @@
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>PottyTime!</title>
-</head>
-<body>
-    <h1>PottyTime!</h1>
-    <form method="POST" action="/charts/new">
-        <input name ="sticker_text" id="id_new_sticker" placeholder="Did you go 1 or 2 (or 0)?" />
-        {% csrf_token %}
-    </form>
-    <h2>Factoid: The human head weighs 8 pounds.</h2>
-    <h3>00:00:00</h3>
-    <!--<table id="id_sticker_chart">-->
-        <!--{% for sticker in stickers %}-->
-            <!--<tr><td>{{ forloop.counter }}: #{{ sticker.text}}</td></tr>-->
-        <!--{% endfor %}-->
-    </table>
-    <h4>00:00:00</h4>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block header_text %}Start a new Sticker Chart{% endblock %}
+
+{% block form_action %}/charts/new{% endblock %}
