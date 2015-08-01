@@ -1,18 +1,44 @@
+<!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PottyTime!</title>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/base.css" rel="stylesheet">
 </head>
 <body>
-    <h1>{% block header_text %}{% endblock %}</h1>
-    <form method="POST" action="{% block form_action %}{% endblock %}">
-        <input name ="sticker_text" id="id_new_sticker" placeholder="Did you go 1 or 2 (or 0)?" />
-        {% csrf_token %}
-    </form>
-    <h2>Factoid: The human head weighs 8 pounds.</h2>
-    <h3>00:00:00</h3>
-    {% block table %}
-    {% endblock %}
-    <h4>00:00:00</h4>
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 jumbotron">
+            <div class="text-center">
+                <h1>{% block header_text %}{% endblock %}</h1>
+                <form method="POST" action="{% block form_action %}{% endblock %}">
+                    <input name="sticker_text" id="id_new_sticker"
+                           class="form-control input-lg"
+                           placeholder="Did you go 1 or 2 (or 0)?"
+                    />
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h2>Factoid: The human head weighs 8 pounds.</h2>
+        <h3>00:00:00</h3>
+        <h4>00:00:00</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {% block table %}
+            {% endblock %}
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

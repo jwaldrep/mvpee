@@ -1,10 +1,11 @@
-from django.test import LiveServerTestCase
+# from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 import unittest
 from selenium.webdriver.common.keys import Keys
 
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -25,10 +26,10 @@ class NewVisitorTest(LiveServerTestCase):
         # She visits the site with her potty-training son, Harold
         self.browser.get(self.live_server_url)
 
-        # She notices the page title and header are potty-centric
+        # She notices the page title and header are potty- and chart-centric
         self.assertIn('Potty', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('Potty', header_text)
+        self.assertIn('Chart', header_text)
 
         # She is presented with an item to discuss during PottyTime,
         factoid_text = self.browser.find_element_by_tag_name('h2').text

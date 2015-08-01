@@ -5,7 +5,7 @@
 {% block form_action %}/charts/{{ chart.id }}/add_sticker{% endblock %}
 
 {% block table %}
-    <table id="id_sticker_chart">
+    <table id="id_sticker_chart" class="table">
         {% for sticker in chart.sticker_set.all %}
             <tr><td>{{ forloop.counter }}: #{{ sticker.text}}</td></tr>
         {% endfor %}
