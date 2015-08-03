@@ -1,41 +1,9 @@
-import sys
-
-# from django.test import LiveServerTestCase
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from .base import FunctionalTest
 from selenium import webdriver
-import unittest
-from unittest import skip
 from selenium.webdriver.common.keys import Keys
 
 
-class NewVisitorTest(StaticLiveServerTestCase):
-    @classmethod
-    def setUpClass(cls):
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.server_url == cls.live_server_url:
-            super().tearDownClass()
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def check_for_row_in_sticker_chart(self, row_text):
-        """Helper function to find a given sticker within the chart"""
-        table = self.browser.find_element_by_id('id_sticker_chart')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(row_text, [row.text for row in rows])
-
+class NewVisitorTest(FunctionalTest):
 
     def test_can_log_a_potty_training_cycle(self):
         # Joan has heard about a cool new potty-training app to use with her toddler.
@@ -132,46 +100,3 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertIn('1: #2', page_text)
 
         # Satisfied, they both go back to sleep
-
-    def test_layout_and_styling(self):
-        # Joan goes to the home page
-        self.browser.get(self.server_url)
-        self.browser.set_window_size(1024, 768)
-
-        # She notices the input box is nicely centered
-        inputbox=self.browser.find_element_by_id('id_new_sticker')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=5
-        )
-
-        # She starts a new chart and sees the input is nicely
-        # centered there too
-        inputbox.send_keys('testing\n')
-        inputbox = self.browser.find_element_by_id('id_new_sticker')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=5
-        )
-
-    @skip
-    def test_cannot_add_empty_chart_items(self):
-        # Joan goes to the home page and accidentally tries to submit
-        # an empty list item. She hits Enter on the empty input box
-
-        # The home page refreshes, and there is an error message saying
-        # that chart items cannot be blank
-
-        # She tries again with an entry for the item, which now works
-
-        # Perversely, she now decides to submit a second blank chart item
-
-        # She receives a similar warning on the chart page
-
-        # And she can correct it by filling some text in
-        self.fail('write me!')
-
-if __name__ == '__main__':
-    unittest.main()
